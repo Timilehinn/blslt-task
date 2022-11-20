@@ -1,0 +1,4 @@
+require('dotenv').config();
+const { KEYPAIR_SECRET, MAILGUN_API_KEY, MAILGUN_KEY, MAILGUN_DOMAIN, TOML } =
+  process.env;
+export { KEYPAIR_SECRET, MAILGUN_API_KEY, MAILGUN_KEY, MAILGUN_DOMAIN, TOML };

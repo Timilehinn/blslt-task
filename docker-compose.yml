@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+
+  rabbitmq1:
+    image: rabbitmq
+    ports:
+      - "5672:5672"
+      - '15672:15672'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - test-app
+
+  customer-service:
+    build: ./customer-service
+      # context: .
+      # dockerfile: ./customer-service/Dockerfile
+    ports: 
+      - "3001:3001"
+    networks:
+      - test-app
+    depends_on:
+      - mongo
+      - rabbitmq1
+  
+  billing-service:
+    build: ./billing-service
+      # context: .
+      # dockerfile: ./billing-service/Dockerfile
+    ports: 
+      - "3002:3002"
+    networks:
+      - test-app
+    depends_on:
+      - rabbitmq1
+      - mongo
+
+  billing-worker-service:
+    build: ./billing-worker-service
+      # context: .
+      # dockerfile: ./billing-worker-service/Dockerfile
+    ports: 
+      - "3003:3003"
+    networks:
+      - test-app
+    depends_on:
+      - rabbitmq1
+      - mongo
+  
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - test-app
+    volumes:
+      - mongo-data:/data/db
+
+ 
+
+networks:
+  test-app:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local
