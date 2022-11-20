@@ -8,6 +8,7 @@
     docker-compose build &&
     docker-compose start
 - The above step spins up new images for Nodejs, Mongodb & RabbitMQ
+  and runs the server at `http://localhost:3001`
 
 ## Customer deposit
 - Endpoint: /deposit
